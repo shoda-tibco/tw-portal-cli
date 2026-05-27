@@ -1,0 +1,43 @@
+{
+	"name": "tw-portal-cli",
+	"version": "0.1.0",
+	"description": "CLI for Transwestern charger availability and reservations.",
+	"module": "index.ts",
+	"bin": {
+		"tw-portal": "./index.ts"
+	},
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"all": "bun run --parallel build cpd lint knip typecheck",
+		"build": "bun run build.ts",
+		"checkfix": "biome check --write --error-on-warnings",
+		"cpd": "bun run --bun jscpd",
+		"knip": "knip-bun --cache",
+		"lint": "biome check --error-on-warnings",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.15",
+		"@types/bun": "latest",
+		"@types/node": "^25.9.1",
+		"jscpd": "^4.2.4",
+		"knip": "^6.14.2"
+	},
+	"peerDependencies": {
+		"typescript": "^6"
+	},
+	"jscpd": {
+		"gitignore": true,
+		"noTips": true,
+		"reporters": [
+			"ai"
+		],
+		"threshold": 0
+	},
+	"knip": {
+		"ignoreDependencies": [
+			"jscpd"
+		]
+	}
+}
