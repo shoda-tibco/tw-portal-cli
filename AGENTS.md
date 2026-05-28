@@ -13,10 +13,6 @@ This repository is a Bun-powered TypeScript CLI for Transwestern charger availab
 - `bun run knip`: detect unused files, exports, and dependencies.
 - `bun run all`: run `cpd`, `lint`, `knip`, and `typecheck` in parallel.
 
-## Coding Style & Naming Conventions
-
-Use TypeScript ESM and Bun APIs. Keep indentation consistent with existing files: tabs, not spaces. Prefer explicit types for command options, API payloads, and parsed external data. Use `camelCase` for functions and variables, `PascalCase` for types, and `UPPER_SNAKE_CASE` for module constants. Keep CLI output formatting separate from request and scheduling logic.
-
 ## Testing Guidelines
 
-No automated test runner is currently configured. Before submitting changes, run `bun run all` and manually exercise affected CLI paths with `--dry-run` where reservations are involved. If adding tests, use Bun-friendly `*.test.ts` files, and add a `test` script to `package.json`.
+Before submitting changes, run `bun run all` and manually exercise affected CLI paths with `--dry-run` where reservations are involved. If adding tests, use Bun-friendly `*.test.ts` files, and add a `test` script to `package.json`.
