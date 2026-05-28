@@ -14,11 +14,11 @@ Download the latest release from the releases page for your OS and platform.
 
 - Run `tw-portal config` to save your login credentials and car details. These will be saved to `~/.tw-portal/config.json`.
 
-- Run `tw-portal schedule` or just `tw-portal` to see available charging times for the next 7 days that are 2+ hours long and start after 8 a.m. The parameters can be customized with flags, see `tw-portal --help` for details.
+- Run `tw-portal schedule` or just `tw-portal` to see available charging times for the next 14 days that are 2+ hours long and start after 8 a.m. The parameters can be customized with flags, see `tw-portal --help` for details.
 
 ```
 ❯ tw-portal
-Transwestern charger availability (Thu, May 28 at 12:00 AM CDT to Thu, Jun 4 at 12:00 AM CDT, 120+ minutes, after 8:00 AM)
+Transwestern charger availability (Fri, May 29 at 12:00 AM CDT to Fri, Jun 12 at 12:00 AM CDT, 120+ minutes, after 8:00 AM)
 
 Date         Start Time  End Time  Reserve Code
 Fri, May 29     3:00 PM   5:00 PM      29668080
@@ -26,6 +26,15 @@ Mon, Jun 1      3:00 PM   5:00 PM      29672400
 Tue, Jun 2     12:30 PM   5:00 PM      29673690
 Tue, Jun 2      3:00 PM   5:00 PM      29673840
 Wed, Jun 3     12:30 PM   5:00 PM      29675130
+Thu, Jun 4     12:30 PM   5:00 PM      29676570
+Thu, Jun 4      3:00 PM   5:00 PM      29676720
+Fri, Jun 5     12:30 PM   5:00 PM      29678010
+Mon, Jun 8     12:30 PM   5:00 PM      29682330
+Mon, Jun 8      1:30 PM   5:00 PM      29682390
+Tue, Jun 9     12:30 PM   5:00 PM      29683770
+Wed, Jun 10    12:30 PM   5:00 PM      29685210
+Thu, Jun 11    11:00 AM   5:00 PM      29686560
+Thu, Jun 11    12:30 PM   5:00 PM      29686650
 ```
 
 - To reserve a time slot, run `tw-portal reserve <reserve_id>`, where `<reserve_id>` is the ID from the schedule output (e.g. `29668080`).

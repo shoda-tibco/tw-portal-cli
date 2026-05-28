@@ -22,6 +22,7 @@ const CONFIG_PATH = `${CONFIG_DIR}/config.json`;
 const SESSION_CACHE_PATH = `${CONFIG_DIR}/session.json`;
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 const RESERVATION_BUFFER_MINUTES = 30;
+const DEFAULT_SCHEDULE_DAYS = 14;
 const DEFAULT_SCHEDULE_MIN_TIME_MINUTES = 8 * 60;
 const RESOURCES = [
 	{ id: "900000013", name: "CAR #1" },
@@ -1226,7 +1227,7 @@ function parseVersionArgs(args: string[]): VersionOptions {
 function parseScheduleArgs(args: string[]): ScheduleOptions {
 	const options: ScheduleOptions = {
 		command: "schedule",
-		days: 7,
+		days: DEFAULT_SCHEDULE_DAYS,
 		from: endOfLocalDay(new Date()),
 		durationMinutes: 120,
 		minTimeMinutes: DEFAULT_SCHEDULE_MIN_TIME_MINUTES,
@@ -1598,7 +1599,7 @@ Commands:
 
     Options:
       --from YYYY-MM-DD|ISO       Start date or timestamp.
-      --days 7                    Number of days to search.
+      --days 14                   Number of days to search.
       --duration 120              Minimum available window length in minutes.
       --min-time 8:00am           Earliest local start time to show each day.
       --json                      Print JSON output.
