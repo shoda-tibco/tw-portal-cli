@@ -5,6 +5,13 @@ const DIST_DIR = "dist";
 const RELEASE_DIR = join(DIST_DIR, "release");
 const BINARY_NAME = "tw-portal";
 const GITHUB_REMOTE = "origin";
+const TAR_BLOCK_SIZE = 512;
+const TAR_NAME_OFFSET = 0;
+const TAR_NAME_SIZE = 100;
+const TAR_MODE_OFFSET = 100;
+const TAR_MODE_SIZE = 8;
+const TAR_CHECKSUM_OFFSET = 148;
+const TAR_CHECKSUM_SIZE = 8;
 
 type PackageMetadata = {
 	name?: unknown;
@@ -183,17 +190,15 @@ async function createArtifacts() {
 		const binaryPath = join(platformDir, artifact.binaryName);
 		const assetPath = join(RELEASE_DIR, artifact.assetName);
 
-		await ensureFile(binaryPath);
+		const binaryStat = await ensureFile(binaryPath);
 
 		if (artifact.format === "tar.gz") {
-			await run([
-				"tar",
-				"-czf",
+			await createTarGzip(
 				assetPath,
-				"-C",
-				platformDir,
 				artifact.binaryName,
-			]);
+				binaryPath,
+				binaryStat.mode,
+			);
 		} else {
 			await run(["zip", "-q", "-X", "-j", assetPath, binaryPath]);
 		}
@@ -210,6 +215,88 @@ async function ensureFile(path: string) {
 	const fileStat = await stat(path).catch(() => undefined);
 	if (!fileStat?.isFile())
 		throw new Error(`Expected build output missing: ${path}`);
+	return fileStat;
+}
+
+async function createTarGzip(
+	assetPath: string,
+	entryName: string,
+	sourcePath: string,
+	sourceMode: number,
+) {
+	const archive = new Bun.Archive({ [entryName]: Bun.file(sourcePath) });
+	const tarBytes = await archive.bytes();
+	// Bun.Archive object entries do not preserve executable bits, so keep the
+	// built binary mode in the tar header before gzipping the archive.
+	applyTarMode(tarBytes, entryName, sourceMode & 0o777);
+	await Bun.write(assetPath, Bun.gzipSync(tarBytes));
+}
+
+function applyTarMode(
+	tarBytes: Uint8Array<ArrayBuffer>,
+	entryName: string,
+	mode: number,
+) {
+	const header = tarBytes.subarray(0, TAR_BLOCK_SIZE);
+	const actualEntryName = readTarHeaderString(
+		header,
+		TAR_NAME_OFFSET,
+		TAR_NAME_SIZE,
+	);
+	if (actualEntryName !== entryName) {
+		throw new Error(
+			`Bun.Archive wrote unexpected tar entry ${actualEntryName}; expected ${entryName}`,
+		);
+	}
+
+	header.fill(
+		0x20,
+		TAR_CHECKSUM_OFFSET,
+		TAR_CHECKSUM_OFFSET + TAR_CHECKSUM_SIZE,
+	);
+	writeTarHeaderString(
+		header,
+		TAR_MODE_OFFSET,
+		TAR_MODE_SIZE,
+		mode.toString(8).padStart(7, "0"),
+	);
+
+	let checksum = 0;
+	for (const byte of header) checksum += byte;
+
+	writeTarHeaderString(
+		header,
+		TAR_CHECKSUM_OFFSET,
+		TAR_CHECKSUM_SIZE,
+		checksum.toString(8).padStart(6, "0"),
+	);
+	header[TAR_CHECKSUM_OFFSET + 6] = 0;
+	header[TAR_CHECKSUM_OFFSET + 7] = 0x20;
+}
+
+function readTarHeaderString(
+	header: Uint8Array<ArrayBuffer>,
+	offset: number,
+	size: number,
+) {
+	let end = offset;
+	const limit = offset + size;
+	while (end < limit && header[end] !== 0) end += 1;
+	return new TextDecoder().decode(header.subarray(offset, end));
+}
+
+function writeTarHeaderString(
+	header: Uint8Array<ArrayBuffer>,
+	offset: number,
+	size: number,
+	value: string,
+) {
+	if (value.length >= size)
+		throw new Error(`Tar header value is too long: ${value}`);
+	for (let index = 0; index < value.length; index += 1) {
+		header[offset + index] = value.charCodeAt(index);
+	}
+	header[offset + value.length] = 0;
 }
 
 async function run(command: string[]) {
