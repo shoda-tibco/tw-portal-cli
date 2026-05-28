@@ -20,11 +20,12 @@ Download the latest release from the releases page for your OS and platform.
 ❯ tw-portal
 Transwestern charger availability (Thu, May 28 at 12:00 AM CDT to Thu, Jun 4 at 12:00 AM CDT, 120+ minutes, after 8:00 AM)
 
-Fri, May 29 3:00 PM-5:00 PM reserve=29668080
-Mon, Jun 1 3:00 PM-5:00 PM reserve=29672400
-Tue, Jun 2 12:30 PM-5:00 PM reserve=29673690
-Tue, Jun 2 3:00 PM-5:00 PM reserve=29673840
-Wed, Jun 3 12:30 PM-5:00 PM reserve=29675130
+Date         Start Time  End Time  Reserve Code
+Fri, May 29     3:00 PM   5:00 PM      29668080
+Mon, Jun 1      3:00 PM   5:00 PM      29672400
+Tue, Jun 2     12:30 PM   5:00 PM      29673690
+Tue, Jun 2      3:00 PM   5:00 PM      29673840
+Wed, Jun 3     12:30 PM   5:00 PM      29675130
 ```
 
 - To reserve a time slot, run `tw-portal reserve <reserve_id>`, where `<reserve_id>` is the ID from the schedule output (e.g. `29668080`).

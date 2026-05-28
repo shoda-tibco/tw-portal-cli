@@ -1634,6 +1634,30 @@ function formatVersionText(result: VersionResult) {
 	].join("\n");
 }
 
+function formatBorderlessTable(
+	rows: string[][],
+	rightAlignedColumns = new Set<number>(),
+) {
+	const widths = rows[0]?.map((_, columnIndex) =>
+		Math.max(...rows.map((row) => row[columnIndex]?.length ?? 0)),
+	);
+	if (!widths) return "";
+
+	return rows
+		.map((row) =>
+			row
+				.map((cell, columnIndex) => {
+					const width = widths[columnIndex] ?? 0;
+					return rightAlignedColumns.has(columnIndex)
+						? cell.padStart(width)
+						: cell.padEnd(width);
+				})
+				.join("  ")
+				.trimEnd(),
+		)
+		.join("\n");
+}
+
 function formatText(
 	result: Awaited<ReturnType<typeof buildScheduleResult>>,
 	showAuth: boolean,
@@ -1667,11 +1691,20 @@ function formatText(
 	if (available.length === 0) {
 		lines.push("No available windows found.");
 	} else {
-		for (const interval of available) {
-			lines.push(
-				`${formatDate(interval.start)} ${formatTime(interval.start)}-${formatTime(interval.end)} reserve=${interval.reserveCode}`,
-			);
-		}
+		lines.push(
+			formatBorderlessTable(
+				[
+					["Date", "Start Time", "End Time", "Reserve Code"],
+					...available.map((interval) => [
+						formatDate(interval.start),
+						formatTime(interval.start),
+						formatTime(interval.end),
+						interval.reserveCode,
+					]),
+				],
+				new Set([1, 2, 3]),
+			),
+		);
 	}
 
 	return lines.join("\n");
