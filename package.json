@@ -19,14 +19,14 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.15",
+		"@biomejs/biome": "^2.4.16",
 		"@types/bun": "latest",
 		"@types/node": "^25.9.1",
 		"jscpd": "^4.2.4",
 		"knip": "^6.14.2"
 	},
 	"peerDependencies": {
-		"typescript": "^6"
+		"typescript": "^6.0.3"
 	},
 	"jscpd": {
 		"gitignore": true,
