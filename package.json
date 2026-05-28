@@ -1,6 +1,6 @@
 {
 	"name": "tw-portal-cli",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "CLI for Transwestern charger availability and reservations.",
 	"module": "index.ts",
 	"bin": {
@@ -13,6 +13,7 @@
 		"build": "bun run build.ts",
 		"checkfix": "biome check --write --error-on-warnings",
 		"cpd": "bun run --bun jscpd",
+		"deploy": "bun run deploy.ts",
 		"knip": "knip-bun --cache",
 		"lint": "biome check --error-on-warnings",
 		"typecheck": "tsc --noEmit"
